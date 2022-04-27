@@ -9,4 +9,4 @@ A [NeosModLoader](https://github.com/zkxs/NeosModLoader) mod for [Neos VR](https
 
 ## Usage
 The wizard can be found in the DevTip 'Create New' menu under Editors/LogiX Cleanup. <br>
-I'd Strongly recomend saving a backup before using any functions of this mod and testing functionality after.
+I'd **Strongly recommend** saving a backup before using any functions of this mod and testing functionality after.
