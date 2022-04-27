@@ -12,7 +12,6 @@ using FrooxEngine.UIX;
 using BaseX;
 using CodeX;
 
-
 namespace NeosLogixCleanupWizard {
 	public class NeosLogixCleanupWizard : NeosMod {
 		public override string Name => "Logix Cleanup Wizard";
@@ -144,13 +143,9 @@ namespace NeosLogixCleanupWizard {
 
 				UI.HorizontalElementWithLabel("Remove Unused LogixReferences:", 0.942f, () => UI.BooleanMemberEditor(removeLogixReferences.Value));
 				UI.HorizontalElementWithLabel("Remove LogixInterfaceProxies:", 0.942f, () => UI.BooleanMemberEditor(removeLogixInterfaceProxies.Value));
-				//UI.Text("//Will remove all Interfaceproxies, they will be regenerated as needed").HorizontalAlign.Value = TextHorizontalAlignment.Left;
-				//UI.HorizontalElementWithLabel("Remove All for Regen:", 0.942f, () => UI.BooleanMemberEditor(removeForRegen.Value));
 
-				//UI.HorizontalLayout(4f);
 				cleanUnusedLogixComponents = UI.Button("Cleanup Unused Logix Components");
 				cleanUnusedLogixComponents.LocalPressed += CleanupLogix;
-				//UI.NestOut();
 
 				destroyInterfaces = UI.Button("Destroy Interfaces");
 				destroyInterfaces.LocalPressed += DestroyInterfaces;
@@ -164,7 +159,6 @@ namespace NeosLogixCleanupWizard {
 				processingRoot.Reference.Value = WizardSlot.World.RootSlot.ReferenceID;
 				removeLogixReferences.Value.Value = true;
 				removeLogixInterfaceProxies.Value.Value = false;
-
 
 				UI.Text("Status:");
 				statusText = UI.Text("");
@@ -180,17 +174,13 @@ namespace NeosLogixCleanupWizard {
 					}
 					int interfacesCount = interfaces.Count;
 					foreach (LogixInterface @interface in interfaces) {
-                        //Probably extra, but ensures we are getting a LogixInterface
-                        //if (@interface.Slot.Name.Contains("LogixInterface_ID")) {
                         @interface.Slot.Destroy();
-                        //}
                     }
                     Msg($"Destroyed {interfacesCount} Interfaces");
                     UpdateStatusText($"Destroyed {interfacesCount} Interfaces");
                     await new Updates(600);
                     UpdateStatusText("");
                 });
-
             }
 			void CleanupLogix(IButton button, ButtonEventData eventData) {
 				UpdateStatusText("Cleaning up LogiX");
