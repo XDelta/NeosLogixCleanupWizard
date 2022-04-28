@@ -78,8 +78,8 @@ namespace NeosLogixCleanupWizard {
 			LogixCleanupWizard(Slot x) {
 				_Wizard = this;
 
-				WizardSlot.GetComponentInChildrenOrParents<Canvas>()?.MarkDeveloper();
 				WizardSlot = x;
+				WizardSlot.Tag = "Developer";
 				WizardSlot.OnPrepareDestroy += Slot_OnPrepareDestroy;
 				WizardSlot.PersistentSelf = false;
 
