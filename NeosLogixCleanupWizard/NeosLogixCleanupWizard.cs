@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 
-using HarmonyLib;
 using NeosModLoader;
 
 using FrooxEngine;
@@ -16,50 +15,18 @@ namespace NeosLogixCleanupWizard {
 	public class NeosLogixCleanupWizard : NeosMod {
 		public override string Name => "Logix Cleanup Wizard";
 		public override string Author => "Delta";
-		public override string Version => "1.0.0";
+		public override string Version => "1.0.1";
 		public override string Link => "https://github.com/Delta/NeosLogixCleanupWizard";
 
 		public override void OnEngineInit() {
-			Harmony harmony = new Harmony("tk.deltawolf.LogixCleanupWizard");
-			harmony.PatchAll();
+			/*Harmony harmony = new Harmony("tk.deltawolf.LogixCleanupWizard");
+			harmony.PatchAll();*/
+			Engine.Current.RunPostInit(AddMenuOption);
+		} 
+		void AddMenuOption() {
+			DevCreateNewForm.AddAction("Editor", "LogiX Cleanup Wizard", (x) => LogixCleanupWizard.GetOrCreateWizard());
 		}
 
-		[HarmonyPatch(typeof(NeosSwapCanvasPanel), "OnAttach")]
-		class DevCreateNewTesting {
-			public static void Postfix(NeosSwapCanvasPanel __instance) {
-				DevCreateNewForm createForm = __instance.Slot.GetComponent<DevCreateNewForm>();
-				if (createForm == null) {
-					return;
-				}
-				createForm.Slot.GetComponentInChildren<Canvas>().Size.Value = new float2(200f, 700f);
-				SyncRef<RectTransform> rectTransform = (SyncRef<RectTransform>) AccessTools.Field(typeof(NeosSwapCanvasPanel), "_currentPanel").GetValue(__instance);
-				rectTransform.OnTargetChange += RectTransform_OnTargetChange;
-			}
-			static void RectTransform_OnTargetChange(SyncRef<RectTransform> reference) {
-				Engine.Current.WorldManager.FocusedWorld.Coroutines.StartTask(async () => {
-					await Task.Delay(TimeSpan.FromSeconds(Engine.Current.WorldManager.FocusedWorld.Time.Delta + 0.01f)).ConfigureAwait(continueOnCapturedContext: false);
-					await default(ToWorld);
-
-					List<Text> texts = reference.Target.Slot.GetComponentsInChildren<Text>();
-					//Add button under Editor/
-					//TODO later refactor to not rely on the existing layout and text content
-					if (!texts[1].Content.Value.Contains("Asset Optimization") || texts[1] == null) {
-						return;
-					}
-
-					Slot buttonSlot = texts[1].Slot.Parent.Duplicate();
-					buttonSlot.GetComponentInChildren<Text>().Content.Value = "LogiX Cleanup";
-					buttonSlot.GetComponent<ButtonRelay<string>>().Destroy();
-
-					Button button = buttonSlot.GetComponent<Button>();
-					button.LocalPressed += Button_LocalPressed;
-				});
-			}
-			static void Button_LocalPressed(IButton button, ButtonEventData eventData) {
-				LogixCleanupWizard.GetOrCreateWizard();
-				button.Slot.GetObjectRoot().Destroy();
-			}
-		}
 		public static async Task<int> OptimizeLogiX(Slot targetSlot, bool removeLogixReferences, bool removeLogixInterfaceProxies) {
 			if (targetSlot == null) {
 				return 0;
