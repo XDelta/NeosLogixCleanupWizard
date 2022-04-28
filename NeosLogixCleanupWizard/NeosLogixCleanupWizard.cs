@@ -93,7 +93,6 @@ namespace NeosLogixCleanupWizard {
 				this.processingRoot = Data.AddSlot("processingRoot").AttachComponent<ReferenceField<Slot>>();
 				removeLogixReferences = Data.AddSlot("removeLogixReferences").AttachComponent<ValueField<bool>>();
 				removeLogixInterfaceProxies = Data.AddSlot("removeLogixInterfaceProxies").AttachComponent<ValueField<bool>>();
-				//removeForRegen = Data.AddSlot("removeForRegen").AttachComponent<ValueField<bool>>();
 
 				UIBuilder UI = new UIBuilder(canvasPanel.Canvas);
 				UI.Canvas.MarkDeveloper();
@@ -103,7 +102,6 @@ namespace NeosLogixCleanupWizard {
 				UI.Style.MinHeight = 24f; ;
 				UI.Style.PreferredHeight = 24f;
 
-				//UI.Text("<b>Created by Delta</b>");
 				UI.Text("Processing Root:").HorizontalAlign.Value = TextHorizontalAlignment.Left;
 				UI.Next("Root");
 				UI.Current.AttachComponent<RefEditor>().Setup(processingRoot.Reference);
