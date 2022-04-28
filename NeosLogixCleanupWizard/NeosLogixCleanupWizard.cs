@@ -24,7 +24,7 @@ namespace NeosLogixCleanupWizard {
 			Engine.Current.RunPostInit(AddMenuOption);
 		} 
 		void AddMenuOption() {
-			DevCreateNewForm.AddAction("Editor", "LogiX Cleanup Wizard", (x) => LogixCleanupWizard.GetOrCreateWizard());
+			DevCreateNewForm.AddAction("Editor", "LogiX Cleanup Wizard", (x) => LogixCleanupWizard.GetOrCreateWizard(x));
 		}
 
 		public static async Task<int> OptimizeLogiX(Slot targetSlot, bool removeLogixReferences, bool removeLogixInterfaceProxies) {
@@ -50,12 +50,12 @@ namespace NeosLogixCleanupWizard {
 			return componentsForRemoval.Count;
 		}
 		class LogixCleanupWizard {
-			public static LogixCleanupWizard GetOrCreateWizard() {
+			public static LogixCleanupWizard GetOrCreateWizard(Slot x) {
 				if (_Wizard != null) {
 					WizardSlot.PositionInFrontOfUser(float3.Backward, distance: 1f);
 					return _Wizard;
 				} else {
-					return new LogixCleanupWizard();
+					return new LogixCleanupWizard(x);
 				}
 			}
 			static LogixCleanupWizard _Wizard;
@@ -75,11 +75,11 @@ namespace NeosLogixCleanupWizard {
 				statusText.Content.Value = info;
 			}
 
-			public LogixCleanupWizard() {
+			LogixCleanupWizard(Slot x) {
 				_Wizard = this;
 
-				WizardSlot = Engine.Current.WorldManager.FocusedWorld.RootSlot.AddSlot("LogiX Cleanup Wizard");
 				WizardSlot.GetComponentInChildrenOrParents<Canvas>()?.MarkDeveloper();
+				WizardSlot = x;
 				WizardSlot.OnPrepareDestroy += Slot_OnPrepareDestroy;
 				WizardSlot.PersistentSelf = false;
 
