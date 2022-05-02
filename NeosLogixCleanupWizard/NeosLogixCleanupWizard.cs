@@ -15,7 +15,7 @@ namespace NeosLogixCleanupWizard {
 	public class NeosLogixCleanupWizard : NeosMod {
 		public override string Name => "Logix Cleanup Wizard";
 		public override string Author => "Delta";
-		public override string Version => "1.0.1";
+		public override string Version => "1.0.2";
 		public override string Link => "https://github.com/Delta/NeosLogixCleanupWizard";
 
 		public override void OnEngineInit() {
