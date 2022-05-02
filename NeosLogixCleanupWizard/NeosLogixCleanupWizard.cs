@@ -164,7 +164,7 @@ namespace NeosLogixCleanupWizard {
 			}
 
 			void RemoveEmptyRefs(IButton button, ButtonEventData eventData) {
-				//Search for Slots named Cast with no components and no children
+				//Search for Slots named Ref with no components and no children
 				WizardSlot.World.Coroutines.StartTask(async () => {
 					List<Slot> refSlots = processingRoot.Reference.Target.GetAllChildren();
 					UpdateStatusText($"Searching {refSlots.Count()} Slots");
@@ -173,7 +173,7 @@ namespace NeosLogixCleanupWizard {
 					foreach (Slot @ref in refSlots) {
 						try {
 							if (!(String.IsNullOrEmpty(@ref.Name))) {
-								if (@ref.Name.Contains("Cast") && @ref.ChildrenCount == 0 && @ref.ComponentCount == 0) {
+								if (@ref.Name.Contains("Ref") && @ref.ChildrenCount == 0 && @ref.ComponentCount == 0) {
 									@ref.Destroy();
 									removalCount++;
 								}
@@ -182,7 +182,7 @@ namespace NeosLogixCleanupWizard {
 							Msg(e);
 						}
 					}
-					UpdateStatusText($"Removed {removalCount} Empty Casts");
+					UpdateStatusText($"Removed {removalCount} Empty Refs");
 					await new Updates(600);
 					UpdateStatusText("");
 				});
