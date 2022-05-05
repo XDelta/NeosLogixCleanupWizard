@@ -46,7 +46,6 @@ namespace NeosLogixCleanupWizard {
 			foreach (Component targetComponent in componentsForRemoval) {
 				targetComponent.Destroy();
 			}
-			await new Updates(10);
 			return componentsForRemoval.Count;
 		}
 		class LogixCleanupWizard {
@@ -99,7 +98,7 @@ namespace NeosLogixCleanupWizard {
 				UI.Canvas.AcceptPhysicalTouch.Value = false;
 				VerticalLayout verticalLayout = UI.VerticalLayout(4f, childAlignment: Alignment.TopCenter);
 				verticalLayout.ForceExpandHeight.Value = false;
-				UI.Style.MinHeight = 24f; ;
+				UI.Style.MinHeight = 24f;
 				UI.Style.PreferredHeight = 24f;
 
 				UI.Text("Processing Root:").HorizontalAlign.Value = TextHorizontalAlignment.Left;
@@ -147,8 +146,6 @@ namespace NeosLogixCleanupWizard {
 					}
 					Msg($"Destroyed {interfacesCount} Interfaces");
 					UpdateStatusText($"Destroyed {interfacesCount} Interfaces");
-					await new Updates(600);
-					UpdateStatusText("");
 				});
 			}
 
@@ -158,8 +155,6 @@ namespace NeosLogixCleanupWizard {
 					int totalRemovedComponents = await OptimizeLogiX(processingRoot.Reference, removeLogixReferences.Value, removeLogixInterfaceProxies.Value);
 					Msg($"Removed {totalRemovedComponents} components");
 					UpdateStatusText($"Removed {totalRemovedComponents} components");
-					await new Updates(600);
-					UpdateStatusText("");
 				});
 			}
 
@@ -183,8 +178,6 @@ namespace NeosLogixCleanupWizard {
 						}
 					}
 					UpdateStatusText($"Removed {removalCount} Empty Refs");
-					await new Updates(600);
-					UpdateStatusText("");
 				});
 			}
 
@@ -208,8 +201,6 @@ namespace NeosLogixCleanupWizard {
 						}
 					}
 					UpdateStatusText($"Removed {removalCount} Empty Casts");
-					await new Updates(600);
-					UpdateStatusText("");
 				});
 			}
 		}
