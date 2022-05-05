@@ -27,27 +27,6 @@ namespace NeosLogixCleanupWizard {
 			DevCreateNewForm.AddAction("Editor", "LogiX Cleanup Wizard", (x) => LogixCleanupWizard.GetOrCreateWizard(x));
 		}
 
-		public static async Task<int> OptimizeLogiX(Slot targetSlot, bool removeLogixReferences, bool removeLogixInterfaceProxies) {
-			if (targetSlot == null) {
-				return 0;
-			}
-			await new Updates(10);
-			List<Component> componentsForRemoval = targetSlot.GetComponentsInChildren((Component targetComponent) => {
-				//Collect all LogiXReference and LogixInterfaceProxies for deletion
-				if (removeLogixReferences && targetComponent is LogixReference) {
-					return true;
-				}
-				if (removeLogixInterfaceProxies && targetComponent is LogixInterfaceProxy) {
-					return true;
-				}
-				return false;
-			});
-
-			foreach (Component targetComponent in componentsForRemoval) {
-				targetComponent.Destroy();
-			}
-			return componentsForRemoval.Count;
-		}
 		class LogixCleanupWizard {
 			public static LogixCleanupWizard GetOrCreateWizard(Slot x) {
 				if (_Wizard != null) {
@@ -134,6 +113,37 @@ namespace NeosLogixCleanupWizard {
 				_Wizard = null;
 			}
 
+			void CleanupLogix(IButton button, ButtonEventData eventData) {
+				UpdateStatusText("Cleaning up LogiX");
+				WizardSlot.World.Coroutines.StartTask(async () => {
+					int totalRemovedComponents = await OptimizeLogiX(processingRoot.Reference, removeLogixReferences.Value, removeLogixInterfaceProxies.Value);
+					Msg($"Removed {totalRemovedComponents} components");
+					UpdateStatusText($"Removed {totalRemovedComponents} components");
+				});
+			}
+
+			public static async Task<int> OptimizeLogiX(Slot targetSlot, bool removeLogixReferences, bool removeLogixInterfaceProxies) {
+				if (targetSlot == null) {
+					return 0;
+				}
+				await new Updates(10);
+				List<Component> componentsForRemoval = targetSlot.GetComponentsInChildren((Component targetComponent) => {
+					//Collect all LogiXReference and LogixInterfaceProxies for deletion
+					if (removeLogixReferences && targetComponent is LogixReference) {
+						return true;
+					}
+					if (removeLogixInterfaceProxies && targetComponent is LogixInterfaceProxy) {
+						return true;
+					}
+					return false;
+				});
+
+				foreach (Component targetComponent in componentsForRemoval) {
+					targetComponent.Destroy();
+				}
+				return componentsForRemoval.Count;
+			}
+
 			void DestroyInterfaces(IButton button, ButtonEventData eventData) {
 				WizardSlot.World.Coroutines.StartTask(async () => {
 					List<LogixInterface> interfaces = WizardSlot.World.RootSlot.GetComponentsInChildren<LogixInterface>();
@@ -146,15 +156,6 @@ namespace NeosLogixCleanupWizard {
 					}
 					Msg($"Destroyed {interfacesCount} Interfaces");
 					UpdateStatusText($"Destroyed {interfacesCount} Interfaces");
-				});
-			}
-
-			void CleanupLogix(IButton button, ButtonEventData eventData) {
-				UpdateStatusText("Cleaning up LogiX");
-				WizardSlot.World.Coroutines.StartTask(async () => {
-					int totalRemovedComponents = await OptimizeLogiX(processingRoot.Reference, removeLogixReferences.Value, removeLogixInterfaceProxies.Value);
-					Msg($"Removed {totalRemovedComponents} components");
-					UpdateStatusText($"Removed {totalRemovedComponents} components");
 				});
 			}
 
