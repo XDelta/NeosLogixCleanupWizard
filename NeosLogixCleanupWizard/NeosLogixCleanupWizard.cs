@@ -16,7 +16,7 @@ namespace NeosLogixCleanupWizard {
 		public override string Name => "Logix Cleanup Wizard";
 		public override string Author => "Delta";
 		public override string Version => "1.0.2";
-		public override string Link => "https://github.com/Delta/NeosLogixCleanupWizard";
+		public override string Link => "https://github.com/XDelta/NeosLogixCleanupWizard";
 
 		public override void OnEngineInit() {
 			/*Harmony harmony = new Harmony("tk.deltawolf.LogixCleanupWizard");
